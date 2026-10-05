@@ -300,3 +300,12 @@ void step10() {
     'Step 10: receipt $receiptAmount, discount $discount, payable ${receiptAmount - discount}',
   );
 }
+/*
+Q1. The shorthand saves you from writing boilerplate code where you manually assign constructor arguments to the corresponding fields inside the constructor body.
+
+Q2. Use a named constructor to offer a distinct, alternative way to create a NEW instance. Use a factory constructor when you need custom logic to decide whether to return a NEW object or an EXISTING cached one.
+
+Q3. An initializer list executes BEFORE the constructor body and is the only place to set final fields before object creation. The constructor body runs AFTER the object is initialized, allowing you to run complex multi-step logic or validation.
+
+Q4. Use a getter to calculate a fresh value on the fly without storing it in memory. Use a setter to validate or restrict data before saving it to a field, protecting the integrity of your object.
+*/
