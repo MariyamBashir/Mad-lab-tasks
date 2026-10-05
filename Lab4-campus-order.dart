@@ -1,4 +1,4 @@
-// lab3.dart - Campus Cafe Order System
+// lab4 - Campus Cafe Order System
 // Name: Maryam Bashir Roll no: 04072313017
 const String rollNo = '04072313017';
 
@@ -257,12 +257,46 @@ void step7() {
 
 void step8() {
   print('--- Step 8 ---');
+  List<MenuItem> menuItems = buildMenu();
+  print('Step 8: menu = $menuItems');
+
+  MenuItem priciest = menuItems.reduce((a, b) => a.price > b.price ? a : b);
+  print('Step 8: priciest = ${priciest.name}');
+
+  int sum = menuItems.fold(0, (prev, element) => prev + element.price);
+  print('Step 8: sum = $sum');
 }
 
 void step9() {
   print('--- Step 9 ---');
+  List<OrderLine> receipt = buildReceipt();
+  int sumGrand = 0;
+
+  for (OrderLine line in receipt) {
+    print('Step 9: ${line.label} = ${line.grand}');
+    OrderLog().add('receipt: ${line.label}');
+    sumGrand += line.grand;
+  }
+
+  print('Step 9: receipt total = $sumGrand');
+  print('Step 9: log size = ${OrderLog().entries.length}');
 }
 
 void step10() {
   print('--- Step 10 ---');
+  String codeText = 'CAFE${seed.toString().padLeft(2, '0')}';
+  Coupon c1 = Coupon.fromCode(codeText);
+  Coupon c2 = Coupon.fromCode(codeText);
+
+  List<OrderLine> receipt = buildReceipt();
+  int receiptAmount = receipt.fold(0, (prev, line) => prev + line.grand);
+  int discount = c1.discountOn(receiptAmount);
+
+  print(
+    'Step 10: $codeText gives ${c1.percent}% off, min spend ${c1.minSpend}',
+  );
+  print('Step 10: cached? ${identical(c1, c2)}');
+  print(
+    'Step 10: receipt $receiptAmount, discount $discount, payable ${receiptAmount - discount}',
+  );
 }
