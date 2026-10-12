@@ -41,7 +41,16 @@ abstract class Borrowable {
   void giveBack();
 }
 
-class Book extends LibraryItem implements Borrowable {
+mixin Renewable {
+  int renewals = 0;
+  bool renew(int limit) {
+    if (renewals >= limit) return false;
+    renewals++;
+    return true;
+  }
+}
+
+class Book extends LibraryItem with Renewable implements Borrowable {
   final int pages;
   Book(super.title, super.year, this.pages);
   @override
@@ -81,7 +90,7 @@ Magazine mainMagazine() {
 
 //step 3
 //we made library class an  abstract class and added @override in both magazine and in book class
-class Dvd extends LibraryItem {
+class Dvd extends LibraryItem with Renewable {
   final int minutes;
   Dvd(super.title, super.year, this.minutes);
 
@@ -167,6 +176,16 @@ void step4() {
 
 void step5() {
   print('--- Step 5 ---');
+  Book book = mainBook();
+  int ok = 0;
+  for (int k = 0; k < renewAttempts; k++) {
+    if (book.renew(renewLimit)) ok++;
+  }
+  print('Step 5: renewed $ok of $renewAttempts attempts (limit $renewLimit)');
+  print('Step 5: renew once more? ${book.renew(renewLimit)}');
+  print('Step 5: dvd can renew too? ${mainDvd().renew(1)}');
+  // Think: Magazine must not renew. If renew was in LibraryItem, every
+  // item would get it. A mixin gives it only to Book and Dvd.
 }
 
 void step6() {
