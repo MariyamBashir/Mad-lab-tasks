@@ -31,14 +31,31 @@ class LibraryItem {
   final String title;
   final int year;
   LibraryItem(this.title, this.year);
+  String describe() => '$title ($year)';
 }
 
 class Book extends LibraryItem {
   final int pages;
   Book(super.title, super.year, this.pages);
+  @override
+  String describe() => '${super.describe()}, $pages pages';
 }
 
 Book mainBook() => Book(titles[u], yearOf(u), 100 + 3 * seed);
+
+//step2
+class Magazine extends LibraryItem {
+  final int issue;
+  Magazine(super.title, super.year, this.issue);
+
+  @override
+  String describe() => '${super.describe()}, issue $issue';
+}
+
+Magazine mainMagazine() {
+  int i = (u + 1) % 10;
+  return Magazine(titles[i], yearOf(i), 1 + (t + u) % 12);
+}
 
 // ===========================================================================
 void main() {
@@ -69,6 +86,11 @@ void step1() {
 
 void step2() {
   print('--- Step 2 ---');
+  print('Step 2: ${mainBook().describe()}');
+  print('Step 2: ${mainMagazine().describe()}');
+  // Think: If I forget @override and mistype the name as descibe(), Dart
+  // creates a NEW method instead of replacing describe(). So describe()
+  // would still run the parent version and the output would not change.
 }
 
 void step3() {
