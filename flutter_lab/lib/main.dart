@@ -38,16 +38,24 @@ final List<String> lifecycleLog = <String>[];
 void main() => runApp(const LabApp());
 
 // Keep the name LabApp and its const constructor: the checker uses them.
+//step 1
 class LabApp extends StatelessWidget {
   const LabApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    // Step 1 replaces everything below.
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(child: Text('Setup OK: seed $seed (t=$t, u=$u)')),
-      ),
+    //runApp receives the ROOT widget of the whole app (LabApp) and the MaterialApp's `home` receives only the FIRST SCREEN (HomePage).
+    return const MaterialApp(title: 'Study Tracker', home: HomePage());
+  }
+}
+
+// stateless only arranges widgets and holds no changing data
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Study Tracker: $course')),
+      body: const Center(child: Text('Hello')),
     );
   }
 }
