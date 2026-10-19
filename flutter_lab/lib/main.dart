@@ -39,6 +39,7 @@ void main() => runApp(const LabApp());
 
 // Keep the name LabApp and its const constructor: the checker uses them.
 //step 1
+// Stateless: it only builds the app root and never changes by itself.
 class LabApp extends StatelessWidget {
   const LabApp({super.key});
   @override
@@ -48,11 +49,13 @@ class LabApp extends StatelessWidget {
   }
 }
 
-// stateless only arranges widgets and holds no changing data
+// Stateless: it only arranges other widgets and holds no changing data.
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
   @override
   Widget build(BuildContext context) {
+    // Think: LabApp > MaterialApp > HomePage > Scaffold > SingleChildScrollView
+    // > Column > Row > Text('Max'). Draw it on paper to count the levels.
     return Scaffold(
       appBar: AppBar(title: Text('Study Tracker: $course')),
       body: SingleChildScrollView(
@@ -79,8 +82,6 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      // Tree: LabApp > MaterialApp > HomePage > Scaffold > SingleChildScrollView
-      // > Column > Row > Text('Max'). Draw it on paper to count the levels.
     );
   }
 }
@@ -96,6 +97,7 @@ class BuggyCounter extends StatefulWidget {
   State<BuggyCounter> createState() => _BuggyCounterState();
 }
 
+// Stateful: this State remembers _clicks.
 class _BuggyCounterState extends State<BuggyCounter> {
   int _clicks = 0;
 
@@ -157,7 +159,7 @@ class GoalBanner extends StatelessWidget {
   final int max;
   const GoalBanner({super.key, required this.count, required this.max});
 
-  // Think: it needs no setState because it has no memory of its own.
+  // it needs no setState because it has no memory of its own.
   // To show a new count, its parent must rebuild it with a new `count`.
   @override
   Widget build(BuildContext context) {
@@ -282,7 +284,7 @@ class _CountdownState extends State<Countdown> {
       children: [
         _left > 0
             ? Text('Time left: $_left s', key: const Key('time-left'))
-            : const Text('Time is up!', key: const Key('time-left')),
+            : const Text('Time is up!', key: Key('time-left')),
         Text('Builds: $_builds', key: const Key('builds')),
       ],
     );
