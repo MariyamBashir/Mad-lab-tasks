@@ -72,6 +72,8 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             const Tally(),
+            const SizedBox(height: 12),
+            const BuggyCounter(),
           ],
         ),
       ),
@@ -82,6 +84,9 @@ class HomePage extends StatelessWidget {
 }
 
 // ---- Provided for Step 7. It has a bug on purpose. Do not rename anything.
+// before the fix, after 3 taps _clicks was 12 (3 x bugStep 4) inside the State,
+// but the screen still showed 0, because build() never ran again.
+// Stateful - the click number changes when the button is tapped.
 class BuggyCounter extends StatefulWidget {
   const BuggyCounter({super.key});
 
@@ -101,7 +106,9 @@ class _BuggyCounterState extends State<BuggyCounter> {
         ElevatedButton(
           key: const Key('bug-button'),
           onPressed: () {
-            _clicks += bugStep;
+            setState(() {
+              _clicks += bugStep;
+            });
           },
           child: Text('+$bugStep'),
         ),
