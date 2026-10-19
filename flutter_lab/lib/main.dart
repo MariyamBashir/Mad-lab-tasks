@@ -73,6 +73,8 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 12),
             const Tally(),
             const SizedBox(height: 12),
+            const Countdown(),
+            const SizedBox(height: 12),
             const BuggyCounter(),
           ],
         ),
@@ -233,5 +235,43 @@ class _TallyState extends State<Tally> {
         ),
       ],
     );
+  }
+}
+
+// Stateful: the seconds left change every second.
+class Countdown extends StatefulWidget {
+  const Countdown({super.key});
+  @override
+  State<Countdown> createState() => _CountdownState();
+}
+
+// Stateful: this State keeps _left and the timer.
+class _CountdownState extends State<Countdown> {
+  late int _left;
+  late Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _left = startSeconds;
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() => _left--);
+      if (_left <= 0) timer.cancel(); // stop at zero
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  // Think: without cancel, the timer keeps calling setState() after the
+  // widget is removed. Console error: "setState() called after dispose()".
+  @override
+  Widget build(BuildContext context) {
+    return _left > 0
+        ? Text('Time left: $_left s', key: const Key('time-left'))
+        : const Text('Time is up!', key: const Key('time-left'));
   }
 }
