@@ -68,10 +68,10 @@ class HomePage extends StatelessWidget {
                 Text('Start: $startCount', key: const Key('info-start')),
                 Text('Step: $stepSize', key: const Key('info-step')),
                 Text('Max: $maxCount', key: const Key('info-max')),
-                const SizedBox(height: 12),
-                const Tally(),
               ],
             ),
+            const SizedBox(height: 12),
+            const Tally(),
           ],
         ),
       ),
@@ -164,23 +164,38 @@ class GoalBanner extends StatelessWidget {
 class Tally extends StatefulWidget {
   const Tally({super.key});
 
-  // Think: the widget is only the settings (it never changes). The State
-  // object holds the memory (_count), so it lives separately and survives
-  // when the widget is rebuilt.
+  // the widget is only the settings (it never changes). The State object holds the memory (_count),
+  // so it lives separately and survives when the widget is rebuilt.
   @override
   State<Tally> createState() => _TallyState();
 }
 
-// Stateful: this is the State that remembers _count.
+// Stateful is the State that remembers _count.
 class _TallyState extends State<Tally> {
   int _count = startCount;
 
   void _plus() {
     setState(() {
       _count += stepSize;
+      if (_count > maxCount) _count = maxCount;
     });
   }
 
+  void _minus() {
+    setState(() {
+      _count -= stepSize;
+      if (_count < 0) _count = 0;
+    });
+  }
+
+  void _reset() {
+    setState(() {
+      _count = startCount;
+    });
+  }
+
+  // the hot reload keeps the State, so the count stays 12 (only the widget code is updated).
+  //the hot restart throws away the State, so the count goes back to startCount.
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -194,6 +209,18 @@ class _TallyState extends State<Tally> {
               key: const Key('plus'),
               onPressed: _plus,
               child: Text('+$stepSize'),
+            ),
+            const SizedBox(width: 8),
+            ElevatedButton(
+              key: const Key('minus'),
+              onPressed: _minus,
+              child: Text('-$stepSize'),
+            ),
+            const SizedBox(width: 8),
+            OutlinedButton(
+              key: const Key('reset'),
+              onPressed: _reset,
+              child: const Text('Reset'),
             ),
           ],
         ),
