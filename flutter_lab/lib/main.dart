@@ -249,10 +249,12 @@ class Countdown extends StatefulWidget {
 class _CountdownState extends State<Countdown> {
   late int _left;
   late Timer _timer;
+  int _builds = 0;
 
   @override
   void initState() {
     super.initState();
+    lifecycleLog.add('initState');
     _left = startSeconds;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() => _left--);
@@ -263,15 +265,26 @@ class _CountdownState extends State<Countdown> {
   @override
   void dispose() {
     _timer.cancel();
+    lifecycleLog.add('dispose');
     super.dispose();
   }
 
-  // Think: without cancel, the timer keeps calling setState() after the
-  // widget is removed. Console error: "setState() called after dispose()".
+  // (Step 8) without cancel, the timer keeps calling setState() after the widget is removed.
+  // Console error: "setState() called after dispose()".
+
+  // each timer tick calls setState once, so build runs once per tick (one per second, not two).
+  // to prove dispose ran, print lifecycleLog with debugPrint(lifecycleLog.toString()).
   @override
   Widget build(BuildContext context) {
-    return _left > 0
-        ? Text('Time left: $_left s', key: const Key('time-left'))
-        : const Text('Time is up!', key: const Key('time-left'));
+    _builds++;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _left > 0
+            ? Text('Time left: $_left s', key: const Key('time-left'))
+            : const Text('Time is up!', key: const Key('time-left')),
+        Text('Builds: $_builds', key: const Key('builds')),
+      ],
+    );
   }
 }
