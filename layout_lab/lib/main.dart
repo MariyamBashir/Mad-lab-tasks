@@ -116,6 +116,8 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 12),
             const InfoPanel(),
             const SizedBox(height: 12),
+            const SummaryRow(),
+            const SizedBox(height: 12),
           ],
         ),
       ),
@@ -150,19 +152,28 @@ class SummaryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Think: Row gives its children unlimited width, so long text overflows.
+    // Expanded gives each child a fixed width limit (constraints go down),
+    // so the Text wraps its words and then picks its own height (sizes go up).
     return Row(
       children: [
-        Text(
-          'Part A: read the widget tree of the $course board from top to bottom.',
-          key: const Key('sum-a'),
+        Expanded(
+          child: Text(
+            'Part A: read the widget tree of the $course board from top to bottom.',
+            key: const Key('sum-a'),
+          ),
         ),
-        Text(
-          'Part B: build each box from small widgets and never extend a built-in class.',
-          key: const Key('sum-b'),
+        Expanded(
+          child: Text(
+            'Part B: build each box from small widgets and never extend a built-in class.',
+            key: const Key('sum-b'),
+          ),
         ),
-        Text(
-          'Part C: break the layout on purpose, then fix it with Expanded or Wrap.',
-          key: const Key('sum-c'),
+        Expanded(
+          child: Text(
+            'Part C: break the layout on purpose, then fix it with Expanded or Wrap.',
+            key: const Key('sum-c'),
+          ),
         ),
       ],
     );
