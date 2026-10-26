@@ -114,6 +114,8 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 12),
             const SwapBoard(),
             const SizedBox(height: 12),
+            const InfoPanel(),
+            const SizedBox(height: 12),
           ],
         ),
       ),
@@ -305,6 +307,40 @@ class _SwapBoardState extends State<SwapBoard> {
           key: const Key('swap'),
           onPressed: swap,
           child: const Text('Swap'),
+        ),
+      ],
+    );
+  }
+}
+
+class InfoPanel extends StatelessWidget {
+  const InfoPanel({super.key});
+  @override
+  Widget build(BuildContext context) {
+    // Think: In a Column the main axis is vertical, so the cross axis is
+    // horizontal. That is why crossAxisAlignment.center moves children
+    // left or right, not up or down.
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          key: const Key('info-row'),
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly, // YOUR VALUE
+          children: [
+            Text('Start: $startSec s', key: const Key('row-a')),
+            Text('Tick: $tick s', key: const Key('row-b')),
+            Text('Stop: $stopAt s', key: const Key('row-c')),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Column(
+          key: const Key('info-col'),
+          crossAxisAlignment: CrossAxisAlignment.center, // YOUR VALUE
+          children: [
+            Text('Name: $studentName', key: const Key('col-a')),
+            Text('Roll no: $rollNo', key: const Key('col-b')),
+            Text('Course: $course', key: const Key('col-c')),
+          ],
         ),
       ],
     );
