@@ -172,21 +172,38 @@ class Clock extends StatefulWidget {
 class _ClockState extends State<Clock> {
   late Timer _timer;
   int _seconds = startSec;
+  int _builds = 0;
 
   @override
   void initState() {
     super.initState();
+    lifecycleLog.add('initState');
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() => _seconds += tick);
-      if (_seconds >= stopAt) timer.cancel(); // stop at your limit
+      if (_seconds >= stopAt) timer.cancel();
     });
   }
 
   @override
+  void dispose() {
+    _timer.cancel();
+    lifecycleLog.add('dispose');
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // Think: We start the Timer in initState because it runs only once.
-    // If we started it in build, every rebuild would start a new timer,
-    // so the clock would get faster and faster.
-    return Text('Session: $_seconds s', key: const Key('clock'));
+    _builds++;
+    // Think: Builds goes up by 1 per second because each tick calls
+    // setState once, and one setState causes one build. If cancel() is
+    // missing in dispose, the timer keeps running after the widget is gone
+    // and Flutter shows "setState() called after dispose()".
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Session: $_seconds s', key: const Key('clock')),
+        Text('Builds: $_builds', key: const Key('builds')),
+      ],
+    );
   }
 }
